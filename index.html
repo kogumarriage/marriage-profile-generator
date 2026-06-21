@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>婚活プロフィール作成 | こぐまりっじ</title>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+      background: #fdf6f8;
+      color: #2c2c2a;
+      min-height: 100vh;
+      padding: 0;
+    }
+    .app-header {
+      background: #fff;
+      border-bottom: 1px solid #f0d6e0;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .app-header h1 {
+      font-size: 17px;
+      font-weight: 600;
+      color: #c03a6a;
+    }
+    .app-header span {
+      font-size: 12px;
+      color: #888;
+    }
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 20px 16px 80px;
+    }
+    .greeting-box {
+      background: linear-gradient(135deg, #fff0f5, #fff8fb);
+      border: 1px solid #f5c0d3;
+      border-radius: 14px;
+      padding: 18px 20px;
+      margin-bottom: 20px;
+      font-size: 15px;
+      line-height: 1.8;
+      color: #5a3040;
+    }
+    .greeting-box .greeting-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #c03a6a;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .progress-wrap {
+      margin-bottom: 20px;
+    }
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      color: #888;
+      margin-bottom: 6px;
+    }
+    .progress-bar-bg {
+      background: #f0d6e0;
+      border-radius: 99px;
+      height: 7px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: #d4537e;
+      border-radius: 99px;
+      transition: width 0.35s ease;
+    }
+    .card {
+      background: #fff;
+      border: 1px solid #f0d6e0;
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+    .card-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #c03a6a;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+    .field-wrap {
+      margin-bottom: 16px;
+    }
+    .field-label {
+      display: block;
+      font-size: 14px;
+      color: #5a5a58;
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+    input[type="text"], textarea, select {
+      width: 100%;
+      border: 1px solid #e8c8d4;
+      border-radius: 10px;
+      padding: 11px 13px;
+      font-size: 15px;
+      font-family: inherit;
+      background: #fff;
+      color: #2c2c2a;
+      outline: none;
+      transition: border-color 0.2s;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    input[type="text"]:focus, textarea:focus, select:focus {
+      border-color: #d4537e;
+      box-shadow: 0 0 0 3px rgba(212,83,126,0.12);
+    }
+    textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24'%3E%3Cpath fill='%23d4537e' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 36px;
+    }
+    .btn-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-top: 8px;
+    }
+    button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 12px 22px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-family: inherit;
+      font-weight: 500;
+      cursor: pointer;
+      border: 1px solid #e8c8d4;
+      background: #fff;
+      color: #c03a6a;
+      transition: background 0.15s, transform 0.1s;
+      min-height: 46px;
+    }
+    button:active { transform: scale(0.97); }
+    button:hover { background: #fff0f5; }
+    button.primary {
+      background: #d4537e;
+      color: #fff;
+      border: none;
+      padding: 14px 28px;
+      font-size: 16px;
+    }
+    button.primary:hover { background: #bf3d68; }
+    button.primary:disabled { background: #e8a0b8; cursor: not-allowed; }
+    .result-card {
+      background: #fff;
+      border: 1px solid #f0d6e0;
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+    .result-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    .result-header h2 {
+      font-size: 16px;
+      font-weight: 600;
+      color: #c03a6a;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .result-body {
+      font-size: 15px;
+      line-height: 1.9;
+      color: #2c2c2a;
+      white-space: pre-wrap;
+      border-top: 1px solid #f0d6e0;
+      padding-top: 14px;
+    }
+    .loading-box {
+      text-align: center;
+      padding: 40px 20px;
+      color: #888;
+      font-size: 15px;
+    }
+    .loading-box .ti {
+      font-size: 30px;
+      display: block;
+      margin-bottom: 12px;
+      color: #d4537e;
+      animation: spin 1.2s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .error-box {
+      background: #fff0f0;
+      border: 1px solid #f5c0c0;
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 14px;
+      color: #a03030;
+      margin-top: 12px;
+    }
+    .name-box {
+      background: #fff;
+      border: 1px solid #f0d6e0;
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+    .name-box label {
+      display: block;
+      font-size: 15px;
+      font-weight: 600;
+      color: #c03a6a;
+      margin-bottom: 10px;
+    }
+    @media (max-width: 480px) {
+      .container { padding: 16px 12px 80px; }
+      button { padding: 11px 16px; font-size: 14px; }
+      button.primary { padding: 13px 20px; font-size: 15px; }
+      .card { padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="app-header">
+    <i class="ti ti-heart" style="color:#d4537e; font-size:20px;"></i>
+    <div>
+      <h1>婚活プロフィール作成</h1>
+      <span>こぐまりっじ × AI カウンセラー</span>
+    </div>
+  </header>
+
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useCallback } = React;
+
+    const SECTIONS = [
+      {
+        id: "motivation", title: "きっかけ・方向性", icon: "ti-heart",
+        questions: [
+          { id: "q1", label: "結婚相談所を利用することになったきっかけは？", type: "textarea", placeholder: "例：友人の紹介、自分で出会いを探すのが難しくなったため など" },
+          { id: "q2", label: "プロフィール全体の方向性", type: "select", options: ["亭主関白（男性がリードする家庭）","男性強め","協調性重視（お互い話し合いながら）","女性上位","女性強め"] },
+          { id: "q3", label: "職場や友人からの第三者的なあなたのイメージ", type: "textarea", placeholder: "例：「真面目で誠実」「いつも明るい」「頼りになる」など" },
+        ]
+      },
+      {
+        id: "work", title: "仕事・キャリア", icon: "ti-briefcase",
+        questions: [
+          { id: "q4a", label: "業種", type: "text", placeholder: "例：医療・IT・製造・飲食 など" },
+          { id: "q4b", label: "必要な資格（あれば）", type: "text", placeholder: "例：看護師、社会福祉士、普通自動車免許 など" },
+          { id: "q5", label: "その職業を選んだ理由", type: "textarea", placeholder: "例：人を助ける仕事がしたかった、父の影響 など" },
+          { id: "q6", label: "現在の職業の将来性", type: "textarea", placeholder: "例：安定しており将来も需要が高い など" },
+          { id: "q7", label: "役職（あれば）", type: "text", placeholder: "例：主任、チームリーダー、一般職 など" },
+          { id: "q8", label: "結婚後も仕事を続けますか？", type: "select", options: ["続ける予定","辞める予定","お相手と相談して決めたい"] },
+          { id: "q9", label: "夜勤はありますか？", type: "select", options: ["なし","あり（月数回程度）","あり（定期的に）"] },
+          { id: "q10", label: "転勤の可能性は？", type: "select", options: ["なし","国内のみ可能性あり","海外含む可能性あり"] },
+          { id: "q11a", label: "産休・育休は取得できますか？", type: "select", options: ["取得可能","取得不可","要相談"] },
+          { id: "q11b", label: "取得できる期間（わかれば）", type: "text", placeholder: "例：最大2年、1年程度 など" },
+          { id: "q12", label: "有給休暇は取得できますか？", type: "select", options: ["比較的取りやすい","普通","取りにくい"] },
+        ]
+      },
+      {
+        id: "lifestyle", title: "趣味・ライフスタイル", icon: "ti-mood-smile",
+        questions: [
+          { id: "q13", label: "現在取り組んでいるスポーツ", type: "text", placeholder: "例：ジム、ランニング、テニス など（なければ「特になし」）" },
+          { id: "q14", label: "過去に取り組んでいたスポーツ", type: "text", placeholder: "例：学生時代に野球、バスケ など" },
+          { id: "q15", label: "健康のために取り組んでいること", type: "text", placeholder: "例：毎日7時間睡眠、週3回のウォーキング など" },
+          { id: "q16", label: "学生時代の部活や習い事", type: "text", placeholder: "例：吹奏楽部、ピアノ、剣道 など" },
+          { id: "q17a", label: "趣味（一人でするもの）", type: "text", placeholder: "例：読書、映画鑑賞、料理 など" },
+          { id: "q17b", label: "趣味（二人でできるもの）", type: "text", placeholder: "例：旅行、ドライブ、カフェ巡り など" },
+          { id: "q19", label: "休日の過ごし方", type: "textarea", placeholder: "例：午前中は掃除・料理、午後は映画を見て過ごすことが多いです など" },
+          { id: "q20", label: "デートしてみたい内容", type: "textarea", placeholder: "例：一緒に料理教室、美術館めぐり、ドライブ旅行 など" },
+          { id: "q21", label: "ストレスの解消方法", type: "text", placeholder: "例：友人と食事、散歩、音楽を聴く など" },
+        ]
+      },
+      {
+        id: "conditions", title: "生活条件・価値観", icon: "ti-home",
+        questions: [
+          { id: "q22a", label: "ペットは大丈夫ですか？", type: "select", options: ["大歓迎","相談次第","アレルギーあり・難しい"] },
+          { id: "q22b", label: "過去にペットを飼っていましたか？", type: "text", placeholder: "例：犬を10年間飼っていました など" },
+          { id: "q23", label: "宗教は信仰していますか？", type: "select", options: ["特になし","仏教（行事のみ）","キリスト教","その他"] },
+          { id: "q28", label: "家事への考え方は？", type: "select", options: ["全面的に任せたい","全面的に任せて欲しい","協力し合いたい"] },
+          { id: "q29", label: "将来の夢・理想の生活", type: "textarea", placeholder: "例：子どもと笑顔で過ごせる温かい家庭を築きたい など" },
+        ]
+      },
+      {
+        id: "appeal", title: "アピール・特記事項", icon: "ti-star",
+        questions: [
+          { id: "q24", label: "結婚することであなたのパートナーが得られるメリット", type: "textarea", placeholder: "例：料理が得意なので毎日おいしいご飯が食べられます など" },
+          { id: "q30", label: "その他アピールしたいこと", type: "textarea", placeholder: "例：笑顔を大切にしています、誠実さが自分の強みです など" },
+          { id: "q18a", label: "持病はありますか？（記載する場合）", type: "select", options: ["特になし（記載不要）","あり（以下に記載）"] },
+          { id: "q18b", label: "持病の詳細（ある場合のみ）", type: "textarea", placeholder: "種類・通院状況・生活への影響など。なければ空欄で構いません。" },
+          { id: "q25", label: "離婚歴はありますか？（再婚の方のみ）", type: "select", options: ["初婚・該当なし","あり（理由を以下に記載）"] },
+          { id: "q25b", label: "離婚した理由（該当する場合）", type: "textarea", placeholder: "例：価値観の違い など。なければ空欄で構いません。" },
+          { id: "q26a", label: "お子さんはいますか？（再婚の方のみ）", type: "select", options: ["いない・該当なし","いる（以下に記載）"] },
+          { id: "q26b", label: "子どもの詳細（いる場合）", type: "textarea", placeholder: "人数・養育費の有無・同居/非同居など" },
+          { id: "q27a", label: "持ち家はありますか？", type: "select", options: ["なし","あり（詳細を以下に記載）"] },
+          { id: "q27b", label: "持ち家の詳細（ある場合）", type: "textarea", placeholder: "ローン残高の有無・リフォーム可否・売却の可否など" },
+        ]
+      }
+    ];
+
+    const STYLE_GUIDE = {
+      "亭主関白（男性がリードする家庭）": "男性がしっかりリードする、頼れる存在として",
+      "男性強め": "男性の意思が中心だが、相手の意見も尊重する姿勢で",
+      "協調性重視（お互い話し合いながら）": "お互いを尊重し、一緒に決めていく協調的なスタイルで",
+      "女性上位": "相手の意見を大切にし、サポートに徹する謙虚なスタンスで",
+      "女性強め": "相手の気持ちを優先し、穏やかで包容力あるイメージで"
+    };
+
+    function App() {
+      const [name, setName] = useState("");
+      const [step, setStep] = useState(-1); // -1 = 名前入力画面
+      const [answers, setAnswers] = useState({});
+      const [result, setResult] = useState("");
+      const [loading, setLoading] = useState(false);
+      const [error, setError] = useState("");
+      const [copied, setCopied] = useState(false);
+
+      const totalSteps = SECTIONS.length;
+      const isLast = step === totalSteps - 1;
+      const isDone = step === totalSteps;
+
+      const set = (id, val) => setAnswers(prev => ({ ...prev, [id]: val }));
+
+      const buildPrompt = () => {
+        const lines = [];
+        SECTIONS.forEach(sec => {
+          sec.questions.forEach(q => {
+            const v = answers[q.id];
+            if (v && v.trim() !== "" && v !== "特になし（記載不要）" && v !== "いない・該当なし" && v !== "初婚・該当なし" && v !== "なし") {
+              lines.push(`【${q.label}】${v}`);
+            }
+          });
+        });
+        const direction = answers.q2 || "協調性重視（お互い話し合いながら）";
+        const styleHint = STYLE_GUIDE[direction] || "";
+        const nameStr = name.trim() ? `会員名：${name.trim()}さん\n` : "";
+
+        return `あなたは婚活カウンセラー「こぐまりっじ」のプロのカウンセラーです。
+以下の回答をもとに、婚活プロフィール文を作成してください。
+
+【作成条件】
+- ${nameStr}読む対象：30歳前後の女性会員
+- 文体：温かみがあり、誠実さが伝わる自然な口語体
+- 方向性：${styleHint}
+- 構成：以下の5段落で作成すること
+  ① 自己紹介・人柄（3〜5文）
+  ② 仕事について（3〜5文）
+  ③ 趣味・ライフスタイル（3〜5文）
+  ④ 結婚後の生活・家庭観（3〜5文）
+  ⑤ あなたへのメッセージ（3〜5文）
+- 年収が低めでも「協力的な姿勢」「一緒に支え合う」表現で好感度を高める
+- 全体で400〜600文字を目安に
+- ネガティブな情報（持病・離婚歴など）は必要な場合のみ誠実に・最小限に触れる
+- 5段落のプロフィール文が完全に終わった後に、必ず改行して以下を追加すること：
+  「---」（区切り線）
+  「【こぐまりっじカウンセラーからのひとこと】」という見出し
+  カウンセラー視点のひとこと（80〜100文字程度）
+  このひとことは途中で絶対に切らずに最後まで書き切ること
+
+【回答情報】
+${lines.join("\n")}
+
+上記をもとに、読んだ女性が「会ってみたい」と感じるプロフィール文と、カウンセラーからのひとことを最後まで必ず完成させてください。`;
+      };
+
+      const generate = useCallback(async () => {
+        setLoading(true);
+        setError("");
+        setResult("");
+        try {
+          const prompt = buildPrompt();
+          const res = await fetch("https://api.anthropic.com/v1/messages", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              model: "claude-sonnet-4-6",
+              max_tokens: 1500,
+              messages: [{ role: "user", content: prompt }]
+            })
+          });
+          const data = await res.json();
+          const text = data.content?.map(b => b.text || "").join("") || "";
+          if (!text) throw new Error("プロフィール文の生成に失敗しました。もう一度お試しください。");
+          setResult(text);
+          setStep(totalSteps);
+        } catch (e) {
+          setError("エラーが発生しました：" + e.message);
+        } finally {
+          setLoading(false);
+        }
+      }, [answers, name]);
+
+      const handleCopy = () => {
+        navigator.clipboard.writeText(result).then(() => {
+          setCopied(true);
+          setTimeout(() => setCopied(false), 2500);
+        });
+      };
+
+      const progress = step < 0 ? 0 : Math.round((step / totalSteps) * 100);
+
+      // ── 名前入力画面 ──
+      if (step === -1) {
+        return (
+          <div className="container">
+            <div className="greeting-box">
+              <div className="greeting-title">
+                <i className="ti ti-message-circle"></i>
+                こぐまりっじへようこそ！
+              </div>
+              はじめまして！婚活カウンセラーの「こぐまりっじ」です🐻<br />
+              このアプリでは、いくつかの質問にお答えいただくだけで、<br />
+              あなたの魅力が伝わるプロフィール文をAIが自動で作成します。<br />
+              まずはお名前を教えてください。
+            </div>
+
+            <div className="name-box">
+              <label htmlFor="member-name">
+                <i className="ti ti-user" style={{marginRight:6, color:"#d4537e"}}></i>
+                あなたのお名前（ニックネームでもOK）
+              </label>
+              <input
+                id="member-name"
+                type="text"
+                value={name}
+                onChange={e => setName(e.target.value)}
+                placeholder="例：田中 太郎、たろうくん など"
+                style={{fontSize:16}}
+              />
+            </div>
+
+            <div className="btn-row">
+              <div></div>
+              <button className="primary" onClick={() => setStep(0)}>
+                はじめる <i className="ti ti-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+        );
+      }
+
+      // ── 生成完了画面 ──
+      if (isDone) {
+        return (
+          <div className="container">
+            {loading && (
+              <div className="loading-box">
+                <i className="ti ti-loader-2"></i>
+                AIがプロフィール文を生成中です…<br />少々お待ちください
+              </div>
+            )}
+            {result && (
+              <>
+                <div className="result-card">
+                  <div className="result-header">
+                    <h2>
+                      <i className="ti ti-file-text" style={{color:"#d4537e"}}></i>
+                      {name ? `${name}さんのプロフィール文` : "生成されたプロフィール文"}
+                    </h2>
+                    <button onClick={handleCopy} style={{padding:"8px 14px", fontSize:13}}>
+                      <i className={`ti ${copied ? "ti-check" : "ti-copy"}`}></i>
+                      {copied ? "コピー完了！" : "コピー"}
+                    </button>
+                  </div>
+                  <div className="result-body">{result}</div>
+                </div>
+                <div className="btn-row">
+                  <button onClick={() => { setStep(-1); setResult(""); setAnswers({}); setName(""); setError(""); }}>
+                    <i className="ti ti-refresh"></i>最初からやり直す
+                  </button>
+                  <button onClick={() => setStep(totalSteps - 1)}>
+                    <i className="ti ti-edit"></i>内容を修正する
+                  </button>
+                </div>
+              </>
+            )}
+            {error && <div className="error-box">{error}</div>}
+          </div>
+        );
+      }
+
+      // ── 質問ステップ画面 ──
+      return (
+        <div className="container">
+          <div className="progress-wrap">
+            <div className="progress-label">
+              <span>ステップ {step + 1} / {totalSteps}：{SECTIONS[step]?.title}</span>
+              <span>{progress}%</span>
+            </div>
+            <div className="progress-bar-bg">
+              <div className="progress-bar-fill" style={{width: progress + "%"}}></div>
+            </div>
+          </div>
+
+          <div className="card">
+            <div className="card-title">
+              <i className={`ti ${SECTIONS[step].icon}`}></i>
+              {SECTIONS[step].title}
+            </div>
+
+            {SECTIONS[step].questions.map(q => (
+              <div className="field-wrap" key={q.id}>
+                <label className="field-label">{q.label}</label>
+                {q.type === "textarea" ? (
+                  <textarea
+                    rows={3}
+                    value={answers[q.id] || ""}
+                    onChange={e => set(q.id, e.target.value)}
+                    placeholder={q.placeholder}
+                  />
+                ) : q.type === "select" ? (
+                  <select
+                    value={answers[q.id] || ""}
+                    onChange={e => set(q.id, e.target.value)}
+                  >
+                    <option value="">--- 選択してください ---</option>
+                    {q.options.map(o => <option key={o} value={o}>{o}</option>)}
+                  </select>
+                ) : (
+                  <input
+                    type="text"
+                    value={answers[q.id] || ""}
+                    onChange={e => set(q.id, e.target.value)}
+                    placeholder={q.placeholder}
+                  />
+                )}
+              </div>
+            ))}
+          </div>
+
+          {error && <div className="error-box">{error}</div>}
+
+          <div className="btn-row">
+            <button onClick={() => setStep(s => s > 0 ? s - 1 : -1)}>
+              <i className="ti ti-arrow-left"></i>戻る
+            </button>
+            {isLast ? (
+              <button className="primary" onClick={generate} disabled={loading}>
+                {loading ? "生成中…" : "✨ プロフィール文を生成する"}
+              </button>
+            ) : (
+              <button className="primary" onClick={() => setStep(s => s + 1)}>
+                次へ <i className="ti ti-arrow-right"></i>
+              </button>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(<App />);
+  </script>
+</body>
+</html>
