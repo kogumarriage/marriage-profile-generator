@@ -1,0 +1,78 @@
+{\rtf1\ansi\ansicpg932\cocoartf2870
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 <!DOCTYPE html>\
+<html>\
+<head>\
+  <title>\uc0\u23130 \u27963 \u12503 \u12525 \u12501 \u12451 \u12540 \u12523 \u33258 \u21205 \u20316 \u25104 </title>\
+  <style>\
+    body \{ font-family: sans-serif; max-width: 800px; margin: auto; padding: 20px; \}\
+    textarea \{ width: 100%; height: 80px; \}\
+    .profile \{ border: 1px solid #ccc; padding: 15px; margin-top: 20px; \}\
+  </style>\
+</head>\
+<body>\
+  <h1>\uc0\u23130 \u27963 \u12503 \u12525 \u12501 \u12451 \u12540 \u12523 \u33258 \u21205 \u20316 \u25104 </h1>\
+  <form id="profileForm">\
+    <label>1. \uc0\u22865 \u27231 </label><br>\
+    <textarea name="q1"></textarea><br><br>\
+\
+    <label>2. \uc0\u26041 \u21521 \u24615 </label><br>\
+    <select name="q2">\
+      <option value="\uc0\u20141 \u20027 \u38306 \u30333 ">\u20141 \u20027 \u38306 \u30333 </option>\
+      <option value="\uc0\u21332 \u35519 \u24615 \u37325 \u35222 ">\u21332 \u35519 \u24615 \u37325 \u35222 </option>\
+      <option value="\uc0\u22899 \u24615 \u19978 \u20301 ">\u22899 \u24615 \u19978 \u20301 </option>\
+    </select><br><br>\
+\
+    <!-- \uc0\u20182 \u12398 \u36074 \u21839 \u12418 \u21516 \u27096 \u12395 \u36861 \u21152  -->\
+\
+    <button type="submit">\uc0\u12503 \u12525 \u12501 \u12451 \u12540 \u12523 \u29983 \u25104 </button>\
+  </form>\
+\
+  <div id="output"></div>\
+\
+  <script>\
+    const templates = \{\
+      "\uc0\u20141 \u20027 \u38306 \u30333 ": (answers) => `\
+        <h2>\uc0\u20141 \u20027 \u38306 \u30333 \u12473 \u12479 \u12452 \u12523 </h2>\
+        <p>\uc0\u31169 \u12399 $\{answers.q2\}\u12473 \u12479 \u12452 \u12523 \u12391 \u12289 $\{answers.q5\}\u12398 \u32887 \u26989 \u12434 \u36984 \u12435 \u12384 \u12398 \u12399 \u23558 \u26469 \u24615 \u12395 \u39749 \u21147 \u12434 \u24863 \u12376 \u12383 \u12363 \u12425 \u12391 \u12377 \u12290 </p>\
+        <p>\uc0\u32080 \u23130 \u24460 \u12399 $\{answers.q8\}\u12398 \u12473 \u12479 \u12452 \u12523 \u12391 \u12289 \u23478 \u20107 \u12399 \u20840 \u38754 \u30340 \u12395 \u20219 \u12379 \u12383 \u12356 \u12392 \u24605 \u12387 \u12390 \u12356 \u12414 \u12377 \u12290 </p>\
+      `,\
+      "\uc0\u21332 \u35519 \u24615 \u37325 \u35222 ": (answers) => `\
+        <h2>\uc0\u21332 \u35519 \u24615 \u37325 \u35222 \u12473 \u12479 \u12452 \u12523 </h2>\
+        <p>\uc0\u31169 \u12399 $\{answers.q2\}\u12473 \u12479 \u12452 \u12523 \u12391 \u12289 $\{answers.q5\}\u12398 \u32887 \u26989 \u12434 \u36984 \u12435 \u12384 \u12398 \u12399 \u12481 \u12540 \u12512 \u12527 \u12540 \u12463 \u12434 \u22823 \u20999 \u12395 \u12375 \u12383 \u12363 \u12425 \u12391 \u12377 \u12290 </p>\
+        <p>\uc0\u32080 \u23130 \u24460 \u12399 $\{answers.q8\}\u12398 \u12473 \u12479 \u12452 \u12523 \u12391 \u12289 \u12362 \u20114 \u12356 \u12398 \u24847 \u35211 \u12434 \u23562 \u37325 \u12375 \u12383 \u12356 \u12392 \u24605 \u12387 \u12390 \u12356 \u12414 \u12377 \u12290 </p>\
+      `,\
+      "\uc0\u22899 \u24615 \u19978 \u20301 ": (answers) => `\
+        <h2>\uc0\u22899 \u24615 \u19978 \u20301 \u12473 \u12479 \u12452 \u12523 </h2>\
+        <p>\uc0\u31169 \u12399 $\{answers.q2\}\u12473 \u12479 \u12452 \u12523 \u12391 \u12289 $\{answers.q5\}\u12398 \u32887 \u26989 \u12434 \u36984 \u12435 \u12384 \u12398 \u12399 \u12497 \u12540 \u12488 \u12490 \u12540 \u12398 \u29420 \u31435 \u24615 \u12434 \u23562 \u37325 \u12375 \u12383 \u12363 \u12425 \u12391 \u12377 \u12290 </p>\
+        <p>\uc0\u32080 \u23130 \u24460 \u12399 $\{answers.q8\}\u12398 \u12473 \u12479 \u12452 \u12523 \u12391 \u12289 \u12362 \u20114 \u12356 \u12398 \u12461 \u12515 \u12522 \u12450 \u12434 \u12469 \u12509 \u12540 \u12488 \u12375 \u12383 \u12356 \u12392 \u24605 \u12387 \u12390 \u12356 \u12414 \u12377 \u12290 </p>\
+      `\
+    \};\
+\
+    document.getElementById("profileForm").addEventListener("submit", function(e) \{\
+      e.preventDefault();\
+      const answers = \{\};\
+      const form = e.target;\
+      for (const pair of new FormData(form)) \{\
+        answers[pair[0]] = pair[1];\
+      \}\
+\
+      const output = document.getElementById("output");\
+      output.innerHTML = "";\
+\
+      for (const [style, template] of Object.entries(templates)) \{\
+        const div = document.createElement("div");\
+        div.className = "profile";\
+        div.innerHTML = template(answers);\
+        output.appendChild(div);\
+      \}\
+    \});\
+  </script>\
+</body>\
+</html>\
+}
